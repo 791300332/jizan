@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="#FFFFFF">
+
+    <ImageView
+        android:id="@+id/index_list_img"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/index_list_tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/index_list_img"
+        android:layout_marginStart="132dp"
+        android:textSize="12dp"
+        android:textColor="#000000"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/index_list_tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/index_list_tv1"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="27dp"
+        android:textSize="12dp"
+        android:textColor="#000000"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/index_list_tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_alignTop="@+id/index_list_tv1"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="54dp"
+        android:layout_marginStart="132dp"
+        android:textSize="12dp"
+        android:textColor="#000000"
+        android:text="TextView" />
+
+</RelativeLayout>

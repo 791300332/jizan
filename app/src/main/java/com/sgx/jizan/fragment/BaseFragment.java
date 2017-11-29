@@ -1,5 +1,6 @@
 package com.sgx.jizan.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,9 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sgx.jizan.R;
+import com.sgx.jizan.activity.GiftDetailActivity;
 import com.sgx.jizan.adapter.GalleryAdapter;
 import com.sgx.jizan.adapter.listview.IndexListViewAdapter;
 import com.sgx.jizan.loader.GlideImageLoader;
@@ -87,6 +91,7 @@ public class BaseFragment extends Fragment {
         for(int i = 0;i<hotList.length();i++) {
             IndexModel d = new IndexModel();
             JSONObject o = hotList.optJSONObject(i);
+            d.setId(o.optInt("id"));
             d.setImgUrl(o.optString("giftSmallImg"));
             d.setTitle(o.optString("giftName"));
             d.setGroupCount(o.optInt("groupCount",0) + "");
@@ -97,6 +102,16 @@ public class BaseFragment extends Fragment {
         listView.setAdapter(new IndexListViewAdapter(getContext(),m));
         listView.setDivider(new ColorDrawable(Color.GRAY));
         listView.setDividerHeight(1);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), GiftDetailActivity.class);
+                intent.putExtra("id",id);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setGridView(View view ,JSONObject msg) throws JSONException {

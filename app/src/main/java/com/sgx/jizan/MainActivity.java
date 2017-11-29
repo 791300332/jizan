@@ -1,12 +1,19 @@
 package com.sgx.jizan;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -14,6 +21,7 @@ import com.sgx.jizan.fragment.BaseFragment;
 import com.sgx.jizan.adapter.viewpage.ViewPagerAdapter;
 import com.sgx.jizan.net.RetrofitFactory;
 import com.sgx.jizan.service.HomeService;
+import com.sgx.jizan.util.SharedPrefenencesUtils;
 
 import java.io.IOException;
 
@@ -25,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MenuItem menuItem;
     private BottomNavigationView bottomNavigationView;
+    private static int REQUEST_PHONE_STATE = 1;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -66,8 +76,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        setPes();
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -96,6 +109,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         setupViewPager(viewPager);
+    }
+
+    private void setPes() {
+        SharedPrefenencesUtils.init(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            toast("需要动态获取权限");
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PHONE_STATE);
+        }else{
+//            toast("不需要动态获取权限");
+            TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+            String deviceId = TelephonyMgr.getDeviceId();
+            if(deviceId == null) {
+                deviceId = Settings.Secure.getString(this.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            }
+            SharedPrefenencesUtils.getInstance().saveData("deviceId",deviceId);
+        }
     }
 
 //    @Override
@@ -130,5 +160,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults) {
+        if (requestCode == REQUEST_PHONE_STATE && grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+            String deviceId = TelephonyMgr.getDeviceId();
+            SharedPrefenencesUtils.getInstance().saveData("deviceId",deviceId);
+        }
+    }
 }

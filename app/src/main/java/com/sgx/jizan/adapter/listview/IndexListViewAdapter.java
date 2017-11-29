@@ -77,8 +77,9 @@ public class IndexListViewAdapter extends BaseAdapter {
         TextView tv1 = (TextView) convertView.findViewById(R.id.index_list_tv1);
         TextView tv2 = (TextView) convertView.findViewById(R.id.index_list_tv2);
         TextView tv3 = (TextView) convertView.findViewById(R.id.index_list_tv3);
-        IndexModel model = list.get(position);
+
         try{
+            IndexModel model = list.get(position);
             if(mImageCache.get(model.getImgUrl()) != null) {
                 iv.setImageDrawable(mImageCache.get(model.getImgUrl()));
             } else {
@@ -88,6 +89,7 @@ public class IndexListViewAdapter extends BaseAdapter {
             tv1.setText(model.getTitle());
             tv2.setText(model.getGroupCount());
             tv3.setText(model.getLookCount());
+            convertView.setId(model.getId());
         }catch (Exception e) {
             e.printStackTrace();
         }
